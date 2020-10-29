@@ -52,7 +52,4 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
   
     - name: Deploy to Dev
-      uses: Azure/webapps-deploy@v2
-      with:
-        app-name: ${{ matrix.app }}
-        package: publish
+      run: az webapp deployment source config-zip -r DeployTest-RG -n ${{ matrix.app }} --src ./publish
