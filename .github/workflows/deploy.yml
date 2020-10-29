@@ -19,19 +19,19 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Publish projects
-      run: dotnet publish -c Release -p:PublishDir=./publish
+      run: dotnet publish -c Release
 
     - name: Upload artifact (webapp)
       uses: actions/upload-artifact@v2
       with:
         name: webapp-test-1
-        path: WebApplication1/publish/
+        path: WebApplication1/*.zip
 
     - name: Upload artifact (function)
       uses: actions/upload-artifact@v2
       with:
         name: function-test-2
-        path: FunctionApp1/publish/
+        path: FunctionApp1/*.zip
 
   deploy-all:
     runs-on: ubuntu-latest
