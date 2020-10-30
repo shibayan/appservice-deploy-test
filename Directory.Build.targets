@@ -1,5 +1,5 @@
 <Project>
-  <Target Name="MakeZipPackage" AfterTargets="AfterPublish">
+  <Target Name="MakeZipPackage" AfterTargets="Publish">
     <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(ProjectDir)$(AssemblyName).zip" Overwrite="true" />
   </Target>
 </Project>
