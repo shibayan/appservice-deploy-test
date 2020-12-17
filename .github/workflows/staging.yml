@@ -29,7 +29,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment: staging
+    environment:
+      name: staging
+      url: https://webapp-deploytest-1-staging.azurewebsites.net
     needs: build
     steps:
     - name: Download artifact
