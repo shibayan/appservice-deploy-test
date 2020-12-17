@@ -51,7 +51,7 @@ jobs:
     environment:
       name: production
       url: https://webapp-deploytest-1.azurewebsites.net
-    needs: deploy
+    needs: build
     steps:
     - name: test
       run: echo test
