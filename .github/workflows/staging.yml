@@ -1,4 +1,4 @@
-name: Deploy
+name: Staging
 
 on:
   pull_request:
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://webapp-deploytest-1-pr-${{ github.event.number }}.azurewebsites.net
+      url: https://${{ env.AZURE_WEB_APP_NAME }}-pr-${{ github.event.number }}.azurewebsites.net
     needs: build
     steps:
     - name: Download artifact
