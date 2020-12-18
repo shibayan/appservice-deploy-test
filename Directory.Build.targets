@@ -1,5 +1,11 @@
 <Project>
-  <Target Name="MakeZipPackage" AfterTargets="Publish">
+  <PropertyGroup>
+    <_MakeZipTarget Condition="$(_IsFunctionsSdkBuild) == 'true'">Publish</_MakeZipTarget>
+    <_MakeZipTarget Condition="$(_IsFunctionsSdkBuild) != 'true'">AfterPublish</_MakeZipTarget>
+  </PropertyGroup>
+
+  <Target Name="MakeZipPackage" AfterTargets="$(_MakeZipTarget)">
     <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(ProjectDir)$(AssemblyName).zip" Overwrite="true" />
   </Target>
+
 </Project>
