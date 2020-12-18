@@ -2,13 +2,17 @@ name: Deploy
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, closed]
     branches: [ main ]
 
 env:
   DOTNET_VERSION: 3.1.x
+  AZURE_WEB_APP_NAME: webapp-deploytest-1
+  AZURE_RESOURCE_GROUP_NAME: deploytest-rg
 
 jobs:
   build:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -31,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://webapp-deploytest-1-staging.azurewebsites.net
+      url: https://webapp-deploytest-1-pr-${{ github.event.number }}.azurewebsites.net
     needs: build
     steps:
     - name: Download artifact
@@ -39,10 +43,29 @@ jobs:
       with:
         name: webapp
 
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create staging slot
+      run: az webapp deployment slot create --name ${{ env.AZURE_WEB_APP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP_NAME }} --slot pr-${{ github.event.number }}
+
     - name: Deploy staging
       uses: azure/webapps-deploy@v2
       with:
-        app-name: webapp-deploytest-1
-        slot-name: staging
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
+        app-name: ${{ env.AZURE_WEB_APP_NAME }}
+        slot-name: pr-${{ github.event.number }}
         package: ./WebApplication1.zip
+
+  delete-slot:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Delete staging slot
+      run: az webapp deployment slot delete --name ${{ env.AZURE_WEB_APP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP_NAME }} --slot pr-${{ github.event.number }}
