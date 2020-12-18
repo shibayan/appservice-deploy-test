@@ -49,7 +49,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Create staging slot
-      run: az webapp deployment slot create -n ${{ env.AZURE_WEB_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} -s pr-${{ github.event.number }} --configuration-source production
+      run: az webapp deployment slot create -n ${{ env.AZURE_WEB_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} -s pr-${{ github.event.number }} --configuration-source ${{ env.AZURE_WEB_APP_NAME }}
 
     - name: Deploy staging
       uses: azure/webapps-deploy@v2
