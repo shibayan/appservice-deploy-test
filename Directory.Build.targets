@@ -1,4 +1,5 @@
 <Project>
+
   <PropertyGroup>
     <_MakeZipTarget Condition="$(_IsFunctionsSdkBuild) == 'true'">Publish</_MakeZipTarget>
     <_MakeZipTarget Condition="$(_IsFunctionsSdkBuild) != 'true'">AfterPublish</_MakeZipTarget>
